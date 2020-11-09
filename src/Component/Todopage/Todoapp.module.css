@@ -1,0 +1,132 @@
+.body{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 10px;
+}
+.body_frame{
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #222;
+    color: white;
+    position: relative;
+}
+.logo_frame{
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+}
+.app_logo {
+    height: 15vmin;
+    pointer-events: none;
+    animation: app_logo_spin 10s infinite linear;
+}
+@keyframes app_logo_spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+}
+.card_div{
+    position: absolute;
+    top: 88%;
+}
+.card{
+    width: 400px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.add_task_dialog{
+    width:600px;
+}
+.dialog_title{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 25px;
+}
+.input_arrng{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+.lable_arrng{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 10px;
+}
+.body_searchbox{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    column-gap: 0px;
+}
+.searchbox{
+    width: 400px;
+    height: 50px;
+    outline-color:lightblue;
+    border: 1.5px solid #7274ff;
+    font-size: 18px;
+} 
+.selectbox{
+    width: 100px;
+    height: 55px;
+    outline-color:lightblue;
+    border: 1.5px solid #7274ff;
+    background-color: white;
+    font-size: 18px;
+}
+.tabbar{
+    width: 700px;
+}
+.contentbox{
+    width: 700px;
+    height: auto;
+    margin-top: 10px;
+}
+.display_card{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    
+}
+.card_content{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    row-gap: 10px;
+    padding: 10px;
+}
+.datepicker_arrng{
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.iconbutton_arrng{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
