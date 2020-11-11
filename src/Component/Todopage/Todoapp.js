@@ -16,9 +16,10 @@ import DateTimePicker from 'react-datetime-picker';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Box from '@material-ui/core/Box';
-
-
+import EditIcon from '@material-ui/icons/Edit';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import Divider from '@material-ui/core/Divider';
 
 export default class Todoapp extends Component {
     constructor(props){
@@ -31,7 +32,13 @@ export default class Todoapp extends Component {
             date:'',
             duedate:'',
             priority:'',
-            tabvalue:0
+            work_status:'',
+            id:1,
+            tabvalue:0,
+            alltask:[],
+            completetask:[],
+            search:'',
+            sort:''
         }
        
     }
@@ -55,14 +62,87 @@ export default class Todoapp extends Component {
             [e.target.name]:e.target.value
         })
     }
-    
+    savedata=()=>{
+        let data={
+            id:this.state.id,
+            title:this.state.title,  
+            discription:this.state.discription,
+            date:this.state.date,
+            duedate:this.state.duedate,
+            priority:this.state.priority,
+        }
+        this.state.alltask.push(data);
+        this.setState({
+            id:this.state.id+1, 
+            add_task_dialog:false,
+            id:'',
+            title:'',  
+            discription:'',
+            date:new Date(),
+            duedate:'',
+            priority:'',
+        })
+    }
+    completeTask=(id)=>{
+
+        this.state.alltask.map((e,i)=>{
+            if(e.id===id){
+                this.state.completetask.push(e)
+                this.state.alltask.splice(i,1)
+            }
+        })
+        this.forceUpdate();
+    }
+    reOpenTask=(id)=>{
+        this.state.completetask.map((e,i)=>{
+            if(e.id===id){
+                this.state.alltask.push(e)
+                this.state.completetask.splice(i,1)
+            }
+        })
+        this.forceUpdate();
+    }
+    deleteCompleteTask=(id)=>{
+        this.state.completetask.map((e,i)=>{
+            if(e.id===id){
+                this.state.completetask.splice(i,1)
+            }
+        })
+        this.forceUpdate();
+    }
+    deleteAllTask=(id)=>{
+        this.state.alltask.map((e,i)=>{
+            if(e.id===id){
+                this.state.alltask.splice(i,1)
+            }
+        })
+        this.forceUpdate();
+        
+    }
+    editTask=(id)=>{
+        this.state.alltask.map((e,i)=>{
+            if(e.id===id){
+                this.setState({
+                    add_task_dialog:true,
+                    title:e.title,
+                    date:e.date,
+                    duedate:e.duedate,
+                    priority:e.priority,
+                    discription:e.discription
+
+                })
+                this.state.alltask.splice(i,1)
+            }
+        })
+        this.forceUpdate();
+    }
+    onSearch=(e)=>{
+        this.setState({
+            [e.target.name]:e.target.value
+        })
+       
+    }
     render() {
-        // console.log(this.state.title)
-        // console.log(this.state.time)
-        // console.log(this.state.discription)
-        // console.log(this.state.date)
-        // console.log(this.state.duedate)
-        // console.log(this.state.priority)
         return (
             <div className={Style.body}>
                 <div className={Style.body_frame}>
@@ -94,7 +174,7 @@ export default class Todoapp extends Component {
                                         <div className={Style.input_arrng}>
                                             <div className={Style.lable_arrng}>
                                                 <lable>Title:</lable>
-                                                <TextField  label="Title" variant="outlined" name="title" onChange={this.handleChange}/>
+                                                <TextField  label="Title" variant="outlined" name="title" value={this.state.title} onChange={this.handleChange}/>
                                             </div>
                                             <div className={Style.lable_arrng}>
                                                 <lable>Time:</lable>
@@ -109,7 +189,7 @@ export default class Todoapp extends Component {
                                         </div>
                                         <div className={Style.lable_arrng}>
                                             <lable>Discription:</lable>
-                                            <TextField  label="Discription" variant="outlined" name="discription"style={{width:"550px"}} onChange={this.handleChange}/>
+                                            <TextField  label="Discription" variant="outlined" value={this.state.discription} name="discription"style={{width:"550px"}} onChange={this.handleChange}/>
                                         </div>
                                         <div className={Style.input_arrng}>
                                             <div className={Style.lable_arrng}>
@@ -117,7 +197,7 @@ export default class Todoapp extends Component {
                                                 <DateTimePicker
                                                     format="dd-MM-y"
                                                     value={this.state.date}
-                                                    // onChange={this.handleChange}
+                                                    
                                                     
                                                 />
                                             </div>
@@ -150,8 +230,8 @@ export default class Todoapp extends Component {
                                     </form>
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button autoFocus onClick={this.handleClose} color="primary">
-                                        Save changes
+                                    <Button autoFocus onClick={this.savedata} color="primary">
+                                        Submit
                                     </Button>
                                 </DialogActions>
                             </div>
@@ -159,8 +239,8 @@ export default class Todoapp extends Component {
                     </div>
                 </div>
                 <div className={Style.body_searchbox}>
-                    <input className={Style.searchbox} placeholder="Search Task"></input>
-                    <select className={Style.selectbox}>
+                    <input className={Style.searchbox} placeholder="Search Task" name="search" onChange={this.onSearch}></input>
+                    <select className={Style.selectbox}name="sort" onChange={this.onSearch}>
                         <option>Select</option>
                         <option>Low</option>
                         <option>High</option>
@@ -169,9 +249,8 @@ export default class Todoapp extends Component {
                 <div className={Style.tabbar}>
                     <AppBar position="static" style={{width:"100%", background:"#7274ff"}}>
                         <Tabs value={this.state.tabvalue} aria-label="simple tabs example">
-                            <Tab label="All Task"  onClick={this.tabChange=()=>{this.setState({tabvalue:0})}}/>
-                            <Tab label="Pending Task" onClick={this.tabChange=()=>{this.setState({tabvalue:1})}}/>
-                            <Tab label="Complete Task" onClick={this.tabChange=()=>{this.setState({tabvalue:2})}}/>
+                            <Tab label="Pending Task"  onClick={this.tabChange=()=>{this.setState({tabvalue:0})}}/>
+                            <Tab label="Complete Task" onClick={this.tabChange=()=>{this.setState({tabvalue:1})}}/>
                             
                         </Tabs>
                     </AppBar>
@@ -180,66 +259,206 @@ export default class Todoapp extends Component {
                     <div>
                         {
                             this.state.tabvalue==0?
-                                <div>
-                                    <Card className={Style.display_card}>
-                                        <div className={Style.card_content}>
-                                            <div>
-                                                <lable>Title:</lable>
-                                                <Typography variant="h4">Ankit</Typography>
-                                            </div>
-                                            <div>
-                                                <lable>Discription:</lable>
-                                                <Typography variant="body2">Ankit is a God boy</Typography>
-                                            </div>
-                                            <div className={Style.datepicker_arrng}>
-                                                <div>
-                                                    <lable>Submited Date:</lable>
-                                                    <DateTimePicker
-                                                        format="dd:MM:y"
-                                                        value={this.state.date}
-                                                        disableCalendar="true"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <lable>Submited Time:</lable>
-                                                    <DateTimePicker
-                                                        format="h:mm:a"
-                                                        value={this.state.date}
-                                                        amPmAriaLabel="Select AM/PM"
-                                                        disableClock="true"
-                                                        disableCalendar="true"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <lable>Due Date:</lable>
-                                                    <DateTimePicker
-                                                        format="dd:MM:y"
-                                                        value={this.state.date}
-                                                        disableCalendar="true"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className={Style.iconbutton_arrng}>
-                                                <div>
-                                                    <IconButton>
-                                                        <CloseIcon />
-                                                    </IconButton>
-                                                    <IconButton>
-                                                        <CloseIcon />
-                                                    </IconButton>
-                                                    <IconButton>
-                                                        <CloseIcon />
-                                                    </IconButton>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Card>
-                                </div>
+                                <Card className={Style.display_card}>
+                                    <div className={Style.card_content}>
+                                        {
+                                            this.state.alltask.map((e)=>{
+                                                if(this.state.search=='' && (this.state.sort=='' ||this.state.sort=='Select')){
+                                                    return(
+                                                        <div>
+                                                            <div>
+                                                                <lable>Title:</lable>
+                                                                <Typography variant="h4">{e.title}</Typography>
+                                                            </div>
+                                                            <div>
+                                                                <lable>Discription:</lable>
+                                                                <Typography variant="body2">{e.discription}</Typography>
+                                                            </div>
+                                                            <div className={Style.datepicker_arrng}>
+                                                                <div>
+                                                                    <lable>Submited Date:</lable>
+                                                                    <DateTimePicker
+                                                                        format="dd:MM:y"
+                                                                        value={e.date}
+                                                                        disableCalendar="true"
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <lable>Submited Time:</lable>
+                                                                    <DateTimePicker
+                                                                        format="h:mm:a"
+                                                                        value={e.date}
+                                                                        amPmAriaLabel="Select AM/PM"
+                                                                        disableClock="true"
+                                                                        disableCalendar="true"
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <lable>Due Date:</lable>
+                                                                    <DateTimePicker
+                                                                        format="dd:MM:y"
+                                                                        value={e.duedate}
+                                                                        disableCalendar="true"
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <lable>Priority</lable>
+                                                                    <Typography>{e.priority}</Typography>
+                                                                </div>
+                                                            </div>
+                                                            <div className={Style.iconbutton_arrng}>
+                                                                <div>
+                                                                    <IconButton>
+                                                                        <EditIcon onClick={()=>this.editTask(e.id)}/>
+                                                                    </IconButton>
+                                                                    <IconButton>
+                                                                        <DoneAllIcon onClick={()=>this.completeTask(e.id)}/>
+                                                                    </IconButton>
+                                                                    <IconButton>
+                                                                        <DeleteForeverIcon onClick={()=>this.deleteAllTask(e.id)}/>
+                                                                    </IconButton>
+                                                                </div>
+                                                            </div>
+                                                            <Divider/>
+                                                        </div>
+                                                    )
+                                                }
+                                                else{
+                                                    if(e.title==this.state.search || e.priority== this.state.sort){
+                                                        return(
+                                                            <div>
+                                                                <div>
+                                                                    <lable>Title:</lable>
+                                                                    <Typography variant="h4">{e.title}</Typography>
+                                                                </div>
+                                                                <div>
+                                                                    <lable>Discription:</lable>
+                                                                    <Typography variant="body2">{e.discription}</Typography>
+                                                                </div>
+                                                                <div className={Style.datepicker_arrng}>
+                                                                    <div>
+                                                                        <lable>Submited Date:</lable>
+                                                                        <DateTimePicker
+                                                                            format="dd:MM:y"
+                                                                            value={e.date}
+                                                                            disableCalendar="true"
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <lable>Submited Time:</lable>
+                                                                        <DateTimePicker
+                                                                            format="h:mm:a"
+                                                                            value={e.date}
+                                                                            amPmAriaLabel="Select AM/PM"
+                                                                            disableClock="true"
+                                                                            disableCalendar="true"
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <lable>Due Date:</lable>
+                                                                        <DateTimePicker
+                                                                            format="dd:MM:y"
+                                                                            value={e.duedate}
+                                                                            disableCalendar="true"
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <lable>Priority</lable>
+                                                                        <Typography>{e.priority}</Typography>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={Style.iconbutton_arrng}>
+                                                                    <div>
+                                                                        <IconButton>
+                                                                            <EditIcon onClick={()=>this.editTask(e.id)}/>
+                                                                        </IconButton>
+                                                                        <IconButton>
+                                                                            <DoneAllIcon onClick={()=>this.completeTask(e.id)}/>
+                                                                        </IconButton>
+                                                                        <IconButton>
+                                                                            <DeleteForeverIcon onClick={()=>this.deleteAllTask(e.id)}/>
+                                                                        </IconButton>
+                                                                    </div>
+                                                                </div>
+                                                                <Divider/>
+                                                            </div>
+                                                        )
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    </div>
+                                </Card>
+                                
                             :
-                            this.state.tabvalue==1?
-                                <div>ankit</div>
-                            :
-                                <div>chy</div>
+                            <div>
+                                <Card className={Style.display_card}>
+                                    <div className={Style.card_content}>
+                                        {
+                                        this.state.completetask.map((e)=>{
+                                            return(
+                                                <div>
+                                                    <div>
+                                                        <lable>Title:</lable>
+                                                        <Typography variant="h4">{e.title}</Typography>
+                                                    </div>
+                                                    <div>
+                                                        <lable>Discription:</lable>
+                                                        <Typography variant="body2">{e.discription}</Typography>
+                                                    </div>
+                                                    <div className={Style.datepicker_arrng}>
+                                                        <div>
+                                                            <lable>Submited Date:</lable>
+                                                            <DateTimePicker
+                                                                format="dd:MM:y"
+                                                                value={e.date}
+                                                                disableCalendar="true"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <lable>Submited Time:</lable>
+                                                            <DateTimePicker
+                                                                format="h:mm:a"
+                                                                value={e.date}
+                                                                amPmAriaLabel="Select AM/PM"
+                                                                disableClock="true"
+                                                                disableCalendar="true"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <lable>Due Date:</lable>
+                                                            <DateTimePicker
+                                                                format="dd:MM:y"
+                                                                value={e.duedate}
+                                                                disableCalendar="true"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <lable>Priority</lable>
+                                                            <Typography>{e.priority}</Typography>
+                                                        </div>
+                                                    </div>
+                                                    <div className={Style.iconbutton_arrng}>
+                                                        <div>
+                                                            <IconButton>
+                                                                <EditIcon/>
+                                                            </IconButton>
+                                                            <Button onClick={()=>this.reOpenTask(e.id)}>
+                                                                Re-open
+                                                            </Button>
+                                                            <IconButton>
+                                                                <DeleteForeverIcon onClick={()=>this.deleteCompleteTask(e.id)}/>
+                                                            </IconButton>
+                                                        </div>
+                                                    </div>
+                                                    <Divider/>
+                                                </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                </Card>
+                            </div>
                         }
                     </div>
                 </div>
