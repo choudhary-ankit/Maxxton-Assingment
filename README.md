@@ -12,8 +12,8 @@ According to given task created a react Todo app for implementing Add, Edit and 
 4) Material UI
 
 ## How to run?
-1) Clone the repository <br><br>
-2) Goto Airprobe_Assingment folder
+1) Clone the repository 
+2) Goto Maxxton_Assingment folder
 3) Run this command `npm install`
 4) Then run this command `npm run start`
 5) Open loacalhost:3000 in browser 
