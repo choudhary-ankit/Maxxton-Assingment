@@ -75,6 +75,13 @@
     align-items: flex-start;
     row-gap: 10px;
 }
+.discription_arrng{
+    width: 550px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 5px;
+}
 .body_searchbox{
     margin-top: 50px;
     display: flex;
@@ -108,8 +115,6 @@
     width: 100%;
     height: auto;
     display: flex;
-    flex-direction: row;
-    column-gap: 50px;
     justify-content: center;
     
 }
@@ -118,9 +123,14 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    row-gap: 10px;
     padding: 10px;
 }
+.card_content_gap{
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
 .datepicker_arrng{
     width: 100%;
     display: flex;
@@ -131,4 +141,61 @@
     width: 100%;
     display: flex;
     justify-content: center;
+}
+@media only screen and (max-width: 600px){
+    .card{
+        width: 200px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .add_task_dialog{
+        width:auto;
+    }
+    .input_arrng{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+        
+    }
+    .discription_arrng{
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        row-gap: 5px;
+    }
+    .body_searchbox{
+        margin-top: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 5px;
+    }
+    .searchbox{
+        width: 300px;
+        height: 50px;
+        outline-color:lightblue;
+        border: 1.5px solid #7274ff;
+        font-size: 18px;
+    }
+    .tabbar{
+        width: auto;
+    } 
+    .contentbox{
+        width: 75%;
+        height: auto;
+        margin-top: 10px;
+        text-align: center;
+    }
+    .datepicker_arrng{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+   
 }
